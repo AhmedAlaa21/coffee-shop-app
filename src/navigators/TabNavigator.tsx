@@ -8,6 +8,7 @@ import FavoritesScreen from '../screens/FavoritesScreen';
 import CartScreen from '../screens/CartScreen';
 import OrderHistory from '../screens/OrderHistory';
 import CustomIcon from '../components/CustomIcon';
+
 import {COLORS} from '../theme/theme';
 import {BlurView} from '@react-native-community/blur';
 
