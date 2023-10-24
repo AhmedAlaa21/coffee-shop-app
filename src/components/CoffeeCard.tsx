@@ -9,7 +9,13 @@ import {
 } from 'react-native';
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import {BORDERRADIUS, COLORS, FONTSIZE} from '../theme/theme';
+import {
+  BORDERRADIUS,
+  COLORS,
+  FONTFAMILY,
+  FONTSIZE,
+  SPACING,
+} from '../theme/theme';
 import CustomIcon from './CustomIcon';
 import BGIcon from './BGIcon';
 
@@ -53,16 +59,16 @@ const CoffeeCard: React.FC<CoffeeCardProps> = ({
           <CustomIcon
             name="star"
             color={COLORS.primaryOrangeHex}
-            size={FONTSIZE.size_18}
+            size={FONTSIZE.size_16}
           />
           <Text style={styles.CardRatingText}>{average_rating}</Text>
         </View>
       </ImageBackground>
-      <Text>{name}</Text>
-      <Text>{special_ingredient}</Text>
-      <View>
-        <Text>
-          $<Text>{price.price}</Text>
+      <Text style={styles.CardTitle}>{name}</Text>
+      <Text style={styles.CardSubtitle}>{special_ingredient}</Text>
+      <View style={styles.CardFooterRow}>
+        <Text style={styles.CardPriceCurrency}>
+          $<Text style={styles.CardPrice}>{price.price}</Text>
         </Text>
         <TouchableOpacity>
           <BGIcon
@@ -78,14 +84,57 @@ const CoffeeCard: React.FC<CoffeeCardProps> = ({
 };
 
 const styles = StyleSheet.create({
-  CardLinearGradientContainer: {},
+  CardLinearGradientContainer: {
+    padding: SPACING.space_15,
+    borderRadius: BORDERRADIUS.radius_25,
+  },
   CardImageBackground: {
     width: CARD_WIDTH,
     height: CARD_WIDTH,
     borderRadius: BORDERRADIUS.radius_20,
     overflow: 'hidden',
   },
-  CardRatingContainer: {},
-  CardRatingText: {},
+  CardRatingContainer: {
+    flexDirection: 'row',
+    backgroundColor: COLORS.primaryBlackRGBA,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: SPACING.space_10,
+    position: 'absolute',
+    borderBottomLeftRadius: BORDERRADIUS.radius_20,
+    borderTopRightRadius: BORDERRADIUS.radius_20,
+    top: 0,
+    right: 0,
+  },
+  CardRatingText: {
+    fontFamily: FONTFAMILY.poppins_medium,
+    color: COLORS.primaryWhiteHex,
+    fontSize: FONTSIZE.size_14,
+    lineHeight: 22,
+  },
+  CardTitle: {
+    fontFamily: FONTFAMILY.poppins_medium,
+    color: COLORS.primaryWhiteHex,
+    fontSize: FONTSIZE.size_16,
+  },
+  CardSubtitle: {
+    fontFamily: FONTFAMILY.poppins_light,
+    color: COLORS.primaryWhiteHex,
+    fontSize: FONTSIZE.size_10,
+  },
+  CardFooterRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: SPACING.space_15,
+  },
+  CardPriceCurrency: {
+    fontFamily: FONTFAMILY.poppins_semibold,
+    color: COLORS.primaryOrangeHex,
+    fontSize: FONTSIZE.size_18,
+  },
+  CardPrice: {
+    color: COLORS.primaryWhiteHex,
+  },
 });
 export default CoffeeCard;
