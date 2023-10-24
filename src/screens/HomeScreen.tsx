@@ -143,24 +143,56 @@ const HomeScreen = () => {
           keyExtractor={item => item.id}
           renderItem={({item}) => {
             return (
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => {}}>
                 <CoffeeCard
                   id={item.id}
                   name={item.name}
                   price={item.prices[2]}
-                  buttonPressHandler={() => {}}
                   index={item.index}
                   type={item.type}
                   rosted={item.rosted}
                   special_ingredient={item.special_ingredient}
                   average_rating={item.average_rating}
                   imagelink_square={item.imagelink_square}
+                  buttonPressHandler={() => {}}
                 />
               </TouchableOpacity>
             );
           }}
         />
+
+        <Text style={styles.CoffeeBeansTitle}>Coffee Beans</Text>
         {/* Beans Flatlist */}
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={BeanList}
+          contentContainerStyle={[
+            styles.FlatListContainer,
+            {
+              marginBottom: tabBarHeight,
+            },
+          ]}
+          keyExtractor={item => item.id}
+          renderItem={({item}) => {
+            return (
+              <TouchableOpacity onPress={() => {}}>
+                <CoffeeCard
+                  id={item.id}
+                  name={item.name}
+                  price={item.prices[2]}
+                  index={item.index}
+                  type={item.type}
+                  rosted={item.rosted}
+                  special_ingredient={item.special_ingredient}
+                  average_rating={item.average_rating}
+                  imagelink_square={item.imagelink_square}
+                  buttonPressHandler={() => {}}
+                />
+              </TouchableOpacity>
+            );
+          }}
+        />
       </ScrollView>
     </View>
   );
@@ -223,6 +255,13 @@ const styles = StyleSheet.create({
     gap: SPACING.space_20,
     paddingVertical: SPACING.space_20,
     paddingHorizontal: SPACING.space_30,
+  },
+  CoffeeBeansTitle: {
+    fontSize: FONTSIZE.size_18,
+    marginLeft: SPACING.space_30,
+    marginTop: SPACING.space_20,
+    fontFamily: FONTFAMILY.poppins_medium,
+    color: COLORS.secondaryLightGreyHex,
   },
 });
 export default HomeScreen;

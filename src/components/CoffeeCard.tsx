@@ -70,7 +70,7 @@ const CoffeeCard: React.FC<CoffeeCardProps> = ({
         <Text style={styles.CardPriceCurrency}>
           $<Text style={styles.CardPrice}>{price.price}</Text>
         </Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => {}}>
           <BGIcon
             color={COLORS.primaryWhiteHex}
             name="add"
@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: SPACING.space_10,
     position: 'absolute',
+    paddingHorizontal: SPACING.space_15,
     borderBottomLeftRadius: BORDERRADIUS.radius_20,
     borderTopRightRadius: BORDERRADIUS.radius_20,
     top: 0,
