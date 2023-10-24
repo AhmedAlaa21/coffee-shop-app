@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   StatusBar,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
+  Dimensions,
 } from 'react-native';
 import {useStore} from '../store/store';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
@@ -28,7 +29,7 @@ const getCategoriesFromData = (data: any) => {
     if (temp[data[i].name] === undefined) {
       temp[data[i].name] = 1;
     } else {
-      temp[data[i].name] += 1;
+      temp[data[i].name]++;
     }
   }
   let categories = Object.keys(temp);
@@ -40,10 +41,10 @@ const getCoffeeList = (category: string, data: any) => {
   if (category === 'All') {
     return data;
   }
-  return data.filter((item: any) => item.category === category);
+  return data.filter((item: any) => item.name === category);
 };
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}: any) => {
   const CoffeeList = useStore((state: any) => state.CoffeeList);
   const BeanList = useStore((state: any) => state.BeansList);
   const [categories, setCategories] = useState(
@@ -58,7 +59,34 @@ const HomeScreen = () => {
     getCoffeeList(categoryIndex.category, CoffeeList),
   );
 
+  const ListRef: any = useRef<FlatList>();
   const tabBarHeight = useBottomTabBarHeight();
+
+  const searchCoffee = (search: string) => {
+    if (search !== '') {
+      ListRef?.current?.scrollToOffset({
+        animated: true,
+        offset: 0,
+      });
+      setCategoryIndex({index: 0, category: categories[0]});
+      setSortedCoffee([
+        ...CoffeeList.filter((item: any) =>
+          item.name.toLowerCase().includes(search.toLowerCase()),
+        ),
+      ]);
+    }
+  };
+
+  const resetSearch = () => {
+    ListRef?.current?.scrollToOffset({
+      animated: true,
+      offset: 0,
+    });
+    setCategoryIndex({index: 0, category: categories[0]});
+    setSortedCoffee([...CoffeeList]);
+    setSearchText('');
+  };
+
   return (
     <View style={styles.screenContainer}>
       <StatusBar backgroundColor={COLORS.primaryBlackHex} />
@@ -73,7 +101,10 @@ const HomeScreen = () => {
         </Text>
 
         <View style={styles.InputContainerComponent}>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity
+            onPress={() => {
+              searchCoffee(searchText);
+            }}>
             <CustomIcon
               style={styles.InputIcon}
               name="search"
@@ -88,16 +119,29 @@ const HomeScreen = () => {
           <TextInput
             placeholder="Find Your coffee..."
             value={searchText}
-            onChangeText={text => setSearchText(text)}
+            onChangeText={text => {
+              setSearchText(text);
+              searchCoffee(text);
+            }}
             placeholderTextColor={COLORS.primaryLightGreyHex}
             style={styles.TextInputContainer}
           />
+          {searchText.length > 0 && (
+            <TouchableOpacity onPress={() => resetSearch()}>
+              <CustomIcon
+                style={styles.InputIcon}
+                name="close"
+                size={FONTSIZE.size_16}
+                color={COLORS.primaryLightGreyHex}
+              />
+            </TouchableOpacity>
+          )}
         </View>
 
         {/* Category Scroller */}
         <ScrollView
-          showsHorizontalScrollIndicator={false}
           horizontal
+          showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.CategoryScrollViewStyle}>
           {categories.map((data, index) => {
             return (
@@ -106,6 +150,10 @@ const HomeScreen = () => {
                 style={styles.CategoryScrollViewContainer}>
                 <TouchableOpacity
                   onPress={() => {
+                    ListRef?.current?.scrollToOffset({
+                      animated: true,
+                      offset: 0,
+                    });
                     setCategoryIndex({
                       index: index,
                       category: categories[index],
@@ -136,14 +184,23 @@ const HomeScreen = () => {
         </ScrollView>
         {/* Coffee Flatlist */}
         <FlatList
+          ref={ListRef}
           horizontal
+          ListEmptyComponent={
+            <View style={styles.EmptyListContainer}>
+              <Text style={styles.EmptyListText}>No such coffee found!</Text>
+            </View>
+          }
           showsHorizontalScrollIndicator={false}
           data={sortedCoffee}
           contentContainerStyle={styles.FlatListContainer}
           keyExtractor={item => item.id}
           renderItem={({item}) => {
             return (
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.push('Details');
+                }}>
                 <CoffeeCard
                   id={item.id}
                   name={item.name}
@@ -263,5 +320,12 @@ const styles = StyleSheet.create({
     fontFamily: FONTFAMILY.poppins_medium,
     color: COLORS.secondaryLightGreyHex,
   },
+  EmptyListContainer: {
+    width: Dimensions.get('window').width - SPACING.space_30 * 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: SPACING.space_36 * 3.6,
+  },
+  EmptyListText: {},
 });
 export default HomeScreen;
