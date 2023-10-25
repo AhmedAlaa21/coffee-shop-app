@@ -9,6 +9,19 @@ const DetailsScreen = ({navigation, route}: any) => {
     route.params.type === 'Coffee' ? state.CoffeeList : state.BeansList,
   )[route.params.index];
 
+  const addToFavourite = useStore((state: any) => state.addToFavoriteList);
+  const deleteFromFavoriteList = useStore(
+    (state: any) => state.deleteFromFavoriteList,
+  );
+
+  const ToggleFavourite = (favourite: boolean, type: string, id: string) => {
+    favourite ? deleteFromFavoriteList(type, id) : addToFavourite(type, id);
+  };
+
+  const BackHandler = () => {
+    navigation.pop();
+  };
+
   // const
   return (
     <View style={styles.ScreenContainer}>
@@ -16,7 +29,21 @@ const DetailsScreen = ({navigation, route}: any) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.ScrollViewFlex}>
-        <ImageBackgroundInfo />
+        <ImageBackgroundInfo
+          enableBackHandler={true}
+          imagelink_portrait={itemOfIndex.imagelink_portrait}
+          type={itemOfIndex.type}
+          id={itemOfIndex.id}
+          favourite={itemOfIndex.favourite}
+          name={itemOfIndex.name}
+          special_ingredient={itemOfIndex.special_ingredient}
+          ingredients={itemOfIndex.ingredients}
+          average_rating={itemOfIndex.average_rating}
+          ratings_count={itemOfIndex.ratings_count}
+          roasted={itemOfIndex.roasted}
+          BackHandler={BackHandler}
+          ToggleFavourite={ToggleFavourite}
+        />
       </ScrollView>
     </View>
   );
