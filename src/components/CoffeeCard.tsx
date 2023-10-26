@@ -25,7 +25,7 @@ interface CoffeeCardProps {
   id: string;
   index: number;
   type: string;
-  rosted: string;
+  roasted: string;
   imagelink_square: ImageSourcePropType;
   name: string;
   special_ingredient: string;
@@ -35,12 +35,13 @@ interface CoffeeCardProps {
 }
 
 const CoffeeCard: React.FC<CoffeeCardProps> = ({
+  id,
   name,
   price,
   buttonPressHandler,
   index,
   type,
-  rosted,
+  roasted,
   special_ingredient,
   average_rating,
   imagelink_square,
@@ -70,7 +71,18 @@ const CoffeeCard: React.FC<CoffeeCardProps> = ({
         <Text style={styles.CardPriceCurrency}>
           $<Text style={styles.CardPrice}>{price.price}</Text>
         </Text>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity
+          onPress={() => {
+            buttonPressHandler({
+              id,
+              type,
+              index,
+              roasted,
+              imagelink_square,
+              special_ingredient,
+              prices: [{...price, quantity: 1}],
+            });
+          }}>
           <BGIcon
             color={COLORS.primaryWhiteHex}
             name="add"
