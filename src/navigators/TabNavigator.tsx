@@ -6,7 +6,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import CartScreen from '../screens/CartScreen';
-import OrderHistory from '../screens/OrderHistory';
+import OrderHistory from '../screens/OrderHistoryScreen';
 import CustomIcon from '../components/CustomIcon';
 
 import {COLORS} from '../theme/theme';

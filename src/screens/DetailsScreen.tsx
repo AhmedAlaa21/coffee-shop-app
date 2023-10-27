@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {
-  StyleSheet,
-  StatusBar,
-  View,
   ScrollView,
+  StatusBar,
+  StyleSheet,
   Text,
+  View,
   TouchableWithoutFeedback,
   TouchableOpacity,
 } from 'react-native';
@@ -20,30 +20,28 @@ import ImageBackgroundInfo from '../components/ImageBackgroundInfo';
 import PaymentFooter from '../components/PaymentFooter';
 
 const DetailsScreen = ({navigation, route}: any) => {
-  const itemOfIndex = useStore((state: any) =>
-    route.params.type === 'Coffee' ? state.CoffeeList : state.BeansList,
+  const ItemOfIndex = useStore((state: any) =>
+    route.params.type == 'Coffee' ? state.CoffeeList : state.BeanList,
   )[route.params.index];
-
-  const addToFavourite = useStore((state: any) => state.addToFavoriteList);
+  const addToFavoriteList = useStore((state: any) => state.addToFavoriteList);
   const deleteFromFavoriteList = useStore(
     (state: any) => state.deleteFromFavoriteList,
   );
-
   const addToCart = useStore((state: any) => state.addToCart);
   const calculateCartPrice = useStore((state: any) => state.calculateCartPrice);
 
-  const [price, setPrice] = useState(itemOfIndex.prices[0]);
+  const [price, setPrice] = useState(ItemOfIndex.prices[0]);
   const [fullDesc, setFullDesc] = useState(false);
 
   const ToggleFavourite = (favourite: boolean, type: string, id: string) => {
-    favourite ? deleteFromFavoriteList(type, id) : addToFavourite(type, id);
+    favourite ? deleteFromFavoriteList(type, id) : addToFavoriteList(type, id);
   };
 
   const BackHandler = () => {
     navigation.pop();
   };
 
-  const addToCartHandler = ({
+  const addToCarthandler = ({
     id,
     index,
     name,
@@ -75,85 +73,90 @@ const DetailsScreen = ({navigation, route}: any) => {
         contentContainerStyle={styles.ScrollViewFlex}>
         <ImageBackgroundInfo
           enableBackHandler={true}
-          imagelink_portrait={itemOfIndex.imagelink_portrait}
-          type={itemOfIndex.type}
-          id={itemOfIndex.id}
-          favourite={itemOfIndex.favourite}
-          name={itemOfIndex.name}
-          special_ingredient={itemOfIndex.special_ingredient}
-          ingredients={itemOfIndex.ingredients}
-          average_rating={itemOfIndex.average_rating}
-          ratings_count={itemOfIndex.ratings_count}
-          roasted={itemOfIndex.roasted}
+          imagelink_portrait={ItemOfIndex.imagelink_portrait}
+          type={ItemOfIndex.type}
+          id={ItemOfIndex.id}
+          favourite={ItemOfIndex.favourite}
+          name={ItemOfIndex.name}
+          special_ingredient={ItemOfIndex.special_ingredient}
+          ingredients={ItemOfIndex.ingredients}
+          average_rating={ItemOfIndex.average_rating}
+          ratings_count={ItemOfIndex.ratings_count}
+          roasted={ItemOfIndex.roasted}
           BackHandler={BackHandler}
           ToggleFavourite={ToggleFavourite}
         />
+
         <View style={styles.FooterInfoArea}>
           <Text style={styles.InfoTitle}>Description</Text>
           {fullDesc ? (
             <TouchableWithoutFeedback
-              onPress={() => setFullDesc(prev => !prev)}>
+              onPress={() => {
+                setFullDesc(prev => !prev);
+              }}>
               <Text style={styles.DescriptionText}>
-                {itemOfIndex.description}
+                {ItemOfIndex.description}
               </Text>
             </TouchableWithoutFeedback>
           ) : (
             <TouchableWithoutFeedback
-              onPress={() => setFullDesc(prev => !prev)}>
+              onPress={() => {
+                setFullDesc(prev => !prev);
+              }}>
               <Text numberOfLines={3} style={styles.DescriptionText}>
-                {itemOfIndex.description}
+                {ItemOfIndex.description}
               </Text>
             </TouchableWithoutFeedback>
           )}
           <Text style={styles.InfoTitle}>Size</Text>
           <View style={styles.SizeOuterContainer}>
-            {itemOfIndex.prices.map((item: any) => (
+            {ItemOfIndex.prices.map((data: any) => (
               <TouchableOpacity
+                key={data.size}
+                onPress={() => {
+                  setPrice(data);
+                }}
                 style={[
                   styles.SizeBox,
                   {
                     borderColor:
-                      item.size === price.size
+                      data.size == price.size
                         ? COLORS.primaryOrangeHex
                         : COLORS.primaryDarkGreyHex,
                   },
-                ]}
-                key={item.size}
-                onPress={() => {
-                  setPrice(item);
-                }}>
+                ]}>
                 <Text
                   style={[
                     styles.SizeText,
                     {
                       fontSize:
-                        itemOfIndex.type === 'bean'
+                        ItemOfIndex.type == 'Bean'
                           ? FONTSIZE.size_14
                           : FONTSIZE.size_16,
                       color:
-                        item.size === price.size
+                        data.size == price.size
                           ? COLORS.primaryOrangeHex
-                          : COLORS.primaryLightGreyHex,
+                          : COLORS.secondaryLightGreyHex,
                     },
                   ]}>
-                  {item.size}
+                  {data.size}
                 </Text>
               </TouchableOpacity>
             ))}
           </View>
         </View>
         <PaymentFooter
-          buttonTitle="Add to cart"
           price={price}
+          buttonTitle="Add to Cart"
           buttonPressHandler={() => {
-            addToCartHandler({
-              id: itemOfIndex.id,
-              index: itemOfIndex.index,
-              name: itemOfIndex.name,
-              roasted: itemOfIndex.roasted,
-              imagelink_square: itemOfIndex.imagelink_square,
-              special_ingredient: itemOfIndex.special_ingredient,
-              type: itemOfIndex.type,
+            addToCarthandler({
+              id: ItemOfIndex.id,
+              index: ItemOfIndex.index,
+              name: ItemOfIndex.name,
+              roasted: ItemOfIndex.roasted,
+              imagelink_square: ItemOfIndex.imagelink_square,
+              special_ingredient: ItemOfIndex.special_ingredient,
+              type: ItemOfIndex.type,
               price: price,
             });
           }}
@@ -191,7 +194,6 @@ const styles = StyleSheet.create({
   SizeOuterContainer: {
     flex: 1,
     flexDirection: 'row',
-    // flexWrap: 'wrap',
     justifyContent: 'space-between',
     gap: SPACING.space_20,
   },
@@ -208,4 +210,5 @@ const styles = StyleSheet.create({
     fontFamily: FONTFAMILY.poppins_medium,
   },
 });
+
 export default DetailsScreen;
